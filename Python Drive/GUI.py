@@ -250,7 +250,14 @@ def main():
         E_stop = not E_stop
     e_stop = Button((625, 482), (150, 100), "E STOP", e_stop_fun, e_stop_fun,
                     True, black, pg.font.Font(None, 36), red, (200, 0, 0))
-    buttons = pg.sprite.RenderPlain(e_stop)
+
+    def navigate_fun():
+        global Navigate
+        Navigate = not Navigate
+    navigate = Button((450, 482), (150, 100), "Automagick", navigate_fun, navigate_fun, 
+                    True, black, pg.font.Font(None, 36), red, (200, 0, 0))
+
+    buttons = pg.sprite.RenderPlain(e_stop, navigate)
     
     pressure = SensorReading("Depth: {0} m", b'P',
                              lambda x: .4 * x - 16, (25, 482))
@@ -332,6 +339,8 @@ use_joy = False
 # whether the robot should stop all activity
 E_stop = False
 
+# whether the robot should start navigating to the dock
+Navigate = False
 
 
 main()
