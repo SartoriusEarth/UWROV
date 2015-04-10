@@ -204,7 +204,14 @@ def update_control_values():
         Drive.control.trans_x = float(pg.mouse.get_pos()[0]) / 400 - 1
         Drive.control.trans_y = 1 - float(pg.mouse.get_pos()[1]) / 400
 
+def auto_navigate_update():
+    """Master update for auto navigation."""
 
+    if E_stop:
+        Drive.control.e_stop = True
+    else:
+        # Begin logic for auto navigation
+        a = 2
 
 def main():
     global joystick
@@ -272,8 +279,11 @@ def main():
     while True:
         # limit to 30 fps
         clock.tick(30)
-        
-        update_control_values()
+        if Navigate:
+            auto_navigate_update()
+        else:
+            update_control_values()
+
         Drive.tick()
         
         # calculate arrow display
