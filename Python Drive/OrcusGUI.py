@@ -1,7 +1,10 @@
-import tkinter as tk	
+import Tkinter as tk	
 #import tkFont
 from time import sleep;
 from MOTOR import MOTOR
+
+# Should I automatically navigate?
+NAVIGATE = false
 
 # Motor line coordinate constants
 FRONT_Y = 40
@@ -168,6 +171,16 @@ class OrcusGUI(tk.Frame):
 		#self.estopFont = tkFont.Font(family='Calibri', size=20, weight='bold')
 		self.estop = tk.Button(self, text='ESTOP', command=self.estopCallback, background='red', width=7, padx=20, pady=20)
 		self.estop.grid(row=3, column=1)
+
+	def navigateStatus(self):
+		return NAVIGATE
+
+	def navigateCallback(self):
+		NAVIGATE = not NAVIGATE
+
+	def navigateButton(self):
+		self.navigate = tk.Button(self, text='NAVIGATE', command=self.navigateCallback, background='blue', width=10, padx=20, pady=20)
+		self.navigate.grid(row=2, column=1)
 	
 	# Displays sensor readings
 	def sensorReadings(self):

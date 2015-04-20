@@ -143,7 +143,10 @@ def write_motor_values(ser):
         ser.write(motors[motor].dir_header + dir * 2);
 
 
+def update_by_navigation(control):
+    # get navigation values from ros
 
+    update_motor_values(control)
 
 
 def update_motor_values(control):
@@ -280,8 +283,12 @@ val = 0
 
 def mainDrive():
 
-    update_joy_values(joystick, control);
-    update_motor_values(control);
+    update_joy_values(joystick, control)
+    
+    if (gui.navigateStatus()):
+        update_by_navigation(control)
+    else:
+        update_motor_values(control)
 
     # sets the motor values to the sliders
     # motors[MOTOR.FR_LF].power = gui.frontLeft * 1.25
