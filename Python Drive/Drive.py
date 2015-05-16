@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # This version should be fairly stable
 
-import serial, math, pygame;
+import serial, math, pygame
 import math
 import rospy
 # from enum import Enum;
@@ -31,10 +31,10 @@ from MOTOR import MOTOR
 
 class Motor:
     def __init__(self, ID, pow_header, dir_header, power = 0):
-        self.ID = ID;
-        self.pow_header = pow_header;
-        self.dir_header = dir_header;
-        self.power = power;
+        self.ID = ID
+        self.pow_header = pow_header
+        self.dir_header = dir_header
+        self.power = power
 
 # class MOTOR(Enum):
     # FR_LF = 1; # front left
@@ -144,6 +144,7 @@ def write_motor_values(ser):
     for motor in motors:
         pow = motors[motor].power;
         dir = b'1' if pow > 0 else b'0';
+        print motors[motor].pow_header + bytes([int(abs(pow))] * 2)
         ser.write(motors[motor].pow_header + bytes([int(abs(pow))] * 2));
         ser.write(motors[motor].dir_header + dir * 2);
 
@@ -164,10 +165,11 @@ def update_motor_values(control):
 def get_motor_power(n, control):
     """Takes the motor number and returns the magnitude of the total power it
     should output, from -255 to 255. Returns 0 if an invalid motor is given."""
-
+    
     power_sum = get_trans_power(n, control) + get_yaw_power(n, control) + \
                 get_rise_power(n, control);
     scaled_power = int(power_sum * 255);
+
     try:
         return min(scaled_power, 255) if scaled_power > 0 else max(scaled_power, -255);
     except ValueError as bad_motor:
@@ -241,11 +243,11 @@ def get_rise_power(n, control):
 def update_joy_values(joystick, control):
     control.trans_x = joystick.get_axis(0);
     control.trans_y = -1 * joystick.get_axis(1);
-    control.rise = -1 * joystick.get_axis(2);
-    control.yaw = joystick.get_axis(4);
+    control.rise = -1 * joystick.get_axis(4);
+    control.yaw = joystick.get_axis(2);
 
-    output_str = control + ",%s", rospy.get_time()
-    rospy.loginfo(output_str)
+    #output_str = control + ",%s", rospy.get_time()
+    #rospy.loginfo(output_str)
 
 def process_joy_events():
     for event in pygame.event.get():
@@ -299,12 +301,12 @@ def mainDrive():
         update_motor_values(control)
 
     # sets the motor values to the sliders
-    # motors[MOTOR.FR_LF].power = gui.frontLeft * 1.25
-    # motors[MOTOR.FR_RT].power = gui.frontRight * 1.25
-    # motors[MOTOR.BA_LF].power = gui.backLeft * 1.25 
-    # motors[MOTOR.BA_RT].power = gui.backRight * 1.25
-    # motors[MOTOR.FR_VT].power = gui.frontVert * 1.25
-    # motors[MOTOR.BA_VT].power = gui.backVert * 1.25
+    motors[MOTOR.FR_LF].power = gui.frontLeft * 1.25
+    motors[MOTOR.FR_RT].power = gui.frontRight * 1.25
+    motors[MOTOR.BA_LF].power = gui.backLeft * 1.25 
+    motors[MOTOR.BA_RT].power = gui.backRight * 1.25
+    motors[MOTOR.FR_VT].power = gui.frontVert * 1.25
+    motors[MOTOR.BA_VT].power = gui.backVert * 1.25
 
     gui.drawMotorStatus(motors)
     gui.estopControl()
@@ -342,6 +344,6 @@ if __name__=="__main__":
     gui.master.maxsize(812, 800)
     gui.master.title('ROV ORCUS')
     joystick = joy_init();
-    ser = connect("COM3");
+    ser = connect("/dev/ttyACM0");
     gui.after(1, mainDrive)
     gui.mainloop()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import Tkinter as tk	
-#import tkFont
+import tkFont
 from time import sleep;
 from MOTOR import MOTOR
 
@@ -41,7 +41,7 @@ class OrcusGUI(tk.Frame):
 		# Displays banner, choose image or text
 		# self.imageBanner()
 		self.textBanner()		
-		
+
 		# Creates eStop button
 		self.estopButton()
 
@@ -72,7 +72,8 @@ class OrcusGUI(tk.Frame):
 	"""	
 
 	# Draws banner from text
-    def textBanner(self):
+	""
+	def textBanner(self):
 		self.bannerFont = tkFont.Font(family='Calibri', size=20, weight='bold')
 		self.banner = tk.Label(self, text='University of Washington Underwater Robotics Club\nUWROV', font = self.bannerFont, background='#883199')
 		self.banner.grid(row=0, column=0, columnspan=3)

@@ -52,10 +52,10 @@ class OrcusGUI(tk.Frame):
 		self.sensorReadings()
 		
 		# Draws ROV top view with translational motor arrows
-		#self.drawRovTopView()
+		self.drawRovTopView()
 		
 		# Draws ROV side view with vertical motor arrows
-		#self.drawRovSideView()
+		self.drawRovSideView()
 		
 		# Reads sliders and updates motor values
 		self.getSliderInput()
@@ -121,9 +121,9 @@ class OrcusGUI(tk.Frame):
 	# Draws ROV top view with motor speed vector overlay
 	def drawRovTopView(self):
 		self.rovTop = tk.Canvas(self, height=235, width=169)
-		self.rovTopView = tk.PhotoImage(file='./orcusTop.gif')
+		#self.rovTopView = tk.PhotoImage(file='./orcusTop.gif')
 		#self.rov = self.rovTop.create_rectangle(20,20,180,255, fill='#4c0099')
-		self.rov = self.rovTop.create_image(1,1,image=self.rovTopView, anchor='nw')
+		#self.rov = self.rovTop.create_image(1,1,image=self.rovTopView, anchor='nw')
 		self.frontLeftLine = self.rovTop.create_line(0,0,0,0)
 		self.frontRightLine = self.rovTop.create_line(0,0,0,0)
 		self.backLeftLine = self.rovTop.create_line(0,0,0,0)
@@ -133,8 +133,8 @@ class OrcusGUI(tk.Frame):
 	# draws ROV side view with motor speed vector overlay
 	def drawRovSideView(self):
 		self.rovSide = tk.Canvas(self, height=148, width=235)
-		self.rovSideView = tk.PhotoImage(file='./orcusSide.gif')
-		self.rov = self.rovSide.create_image(1,1,image=self.rovSideView, anchor='nw')
+		#self.rovSideView = tk.PhotoImage(file='./orcusSide.gif')
+		#self.rov = self.rovSide.create_image(1,1,image=self.rovSideView, anchor='nw')
 		self.frontVertLine = self.rovTop.create_line(0,0,0,0)
 		self.backVertLine = self.rovTop.create_line(0,0,0,0)
 		self.rovSide.grid(row = 1, column = 1, padx = 30, pady = 30)

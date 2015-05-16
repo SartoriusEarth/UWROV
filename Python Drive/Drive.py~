@@ -59,6 +59,9 @@ class Control:
         self.rise_tare = rise_tare;
         self.rise_control = rise_control;
 
+    def __str__(self):
+        return '{self.trans_x},{self.trans_y},{self.yaw},{self.rise},{self.trans_x_tare},{self.trans_y_tare},{self.yaw_tare},{self.rise_tare},{self.rise_control}'.format(self=self)
+
     def tare(self):
         self.trans_x_tare = self.trans_x;
         self.trans_y_tare = self.trans_y;
@@ -339,6 +342,6 @@ if __name__=="__main__":
     gui.master.maxsize(812, 800)
     gui.master.title('ROV ORCUS')
     joystick = joy_init();
-    ser = connect("COM3");
+    ser = connect("/dev/ttyACM0");
     gui.after(1, mainDrive)
     gui.mainloop()
