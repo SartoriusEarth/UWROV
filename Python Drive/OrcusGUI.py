@@ -3,8 +3,6 @@ import Tkinter as tk
 from time import sleep;
 from MOTOR import MOTOR
 
-# Should I automatically navigate?
-NAVIGATE = false
 
 # Motor line coordinate constants
 FRONT_Y = 40
@@ -31,6 +29,7 @@ class OrcusGUI(tk.Frame):
 		self.backVert = 0
 		# Initialize ESTOP
 		self.ESTOP = False # starts with system running?  True means stop
+		self.NAVIGATE  = False
 		# Initialize sensor values
 		self.ROVconnect = "disconnected"
 		self.controllerConnect = "disconnected"
@@ -43,6 +42,9 @@ class OrcusGUI(tk.Frame):
 		
 		# Creates eStop button
 		self.estopButton()
+
+		# Creates navigate button
+		self.navigateButton()
 		
 		# Displays sensor readings
 		self.sensorReadings()
@@ -173,10 +175,10 @@ class OrcusGUI(tk.Frame):
 		self.estop.grid(row=3, column=1)
 
 	def navigateStatus(self):
-		return NAVIGATE
+		return self.NAVIGATE
 
 	def navigateCallback(self):
-		NAVIGATE = not NAVIGATE
+		self.NAVIGATE = not self.NAVIGATE
 
 	def navigateButton(self):
 		self.navigate = tk.Button(self, text='NAVIGATE', command=self.navigateCallback, background='blue', width=10, padx=20, pady=20)

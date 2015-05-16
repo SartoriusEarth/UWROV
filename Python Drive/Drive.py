@@ -1,5 +1,6 @@
 # This version should be fairly stable
 
+import rospy
 import serial, math, pygame;
 import math
 # from enum import Enum;
@@ -325,13 +326,15 @@ def mainDrive():
 
     gui.after(1, mainDrive) # loops the mainDrive method
 
-# Start gui and call mainDrive loop
-gui = OrcusGUI()
-gui.master.geometry("812x800") # make sure all widgets start inside
-gui.master.minsize(812, 800)
-gui.master.maxsize(812, 800)
-gui.master.title('ROV ORCUS')
-joystick = joy_init();
-ser = connect("COM3");
-gui.after(1, mainDrive)
-gui.mainloop()
+
+if __name__=="__main__":
+    # Start gui and call mainDrive loop
+    gui = OrcusGUI()
+    gui.master.geometry("812x800") # make sure all widgets start inside
+    gui.master.minsize(812, 800)
+    gui.master.maxsize(812, 800)
+    gui.master.title('ROV ORCUS')
+    joystick = joy_init();
+    ser = connect("COM3");
+    gui.after(1, mainDrive)
+    gui.mainloop()
