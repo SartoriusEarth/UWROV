@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 class MOTOR():
 	FR_LF = 1; # front left
 	FR_RT = 2; # front right
