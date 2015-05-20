@@ -142,11 +142,19 @@ def write_motor_values(ser):
         raise ValueError("write_motor_values: ser not of type Serial, of type",
                          type(ser));
     for motor in motors:
-        pow = motors[motor].power;
-        dir = b'1' if pow > 0 else b'0';
-        print motors[motor].pow_header + bytes([int(abs(pow))] * 2)
-        ser.write(motors[motor].pow_header + bytes([int(abs(pow))] * 2));
-        ser.write(motors[motor].dir_header + dir * 2);
+        pow = motors[motor].power        
+        power_bytes = bytearray()
+        power_bytes.append(int(abs(pow)))
+        power_bytes *= 2
+        power_bytes.insert(0, motors[motor].pow_header)
+        ser.write(power_bytes)
+
+        dir = b'1' if pow > 0 else b'0'
+        dir_bytes = bytearray()
+        dir_bytes.append(dir)
+        dir_bytes *= 2
+        dir_bytes.insert(0, motors[motor].dir_header)
+        ser.write(dir_bytes)
 
 
 def update_by_navigation(control):
