@@ -4,40 +4,40 @@ import time
 
 class PID():
 
-    def __init__(self, Kp=0, Kd=0, Ki=0):
+    def __init__(self, Kp=0, Kd=0, Ki=0, Integrator_max=500, Integrator_min=-500):
         self.Kp = Kp
         self.Kd = Kd
         self.Ki = Ki
 
-        self.current_time = time.time()
-        self.previous_time = self.current_time
+        self.Integrator_max = Integrator_max
+        self.Integrator_min = Integrator_min
 
         self.previous_error = 0
 
         # results stored in these variables
-        self.Xp = 0
-        self.Xd = 0
-        self.Xi = 0
+        self.P = 0
+        self.D = 0
+        self.I = 0
 
     def update(self, error):
-        self.current_time = time.time()
-        dt = self.current_time - self.previous_time
-        self.previous_time = self.current_time
 
-        self.Xp = self.Kp * error
-        self.Xi += error * dt
+        self.P = self.Kp * error
 
-        de = error - self.previous_error
-        self.Xd = de/dt if dt > 0 else 0
-        
+        self.I += error
+        if self.I > self.Integrator_max:
+            self.I = self.Integrator_max
+        elif self.I < self.Integrator_min:
+            self.I = self.Integrator_min
+
+        self.D = error - self.previous_error
         self.previous_error = error
 
-        return self.Xp + (self.Kd * self.Xd) + (self.Ki * self.Xi)
+        return self.P + (self.Kd * self.D) + (self.Ki * self.I)
 
     def reset(self):
-        self.Xp = 0
-        self.Xd = 0
-        self.Xi = 0
+        self.P = 0
+        self.D = 0
+        self.I = 0
 
 if __name__=="__main__":
     pid = PID(Kp=2, Kd=50, Ki=0)

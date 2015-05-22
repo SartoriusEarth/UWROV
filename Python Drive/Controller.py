@@ -2,6 +2,7 @@
 
 import from PID *
 import math
+import zip
 
 # import note for the math: 
 #   - z is the axis pointing out of the dock
@@ -11,25 +12,24 @@ import math
 #   - gamma is the angle of the ROV relative to the dock
 
 class Controller():
-    def __init__(self, x, y, z):
+    def __init__(self, trans):
 
-        # control the radius from the dock,
-        # the height of the ROV relative to the dock,
-        # and the angle of the ROV relative to the dock (between pi and -pi)
-        self.rDesired = math.sqrt(x**2 + z**2)
-        self.yDesired = y
-        self.gammaDesired = math.atan2(x, z)
+        x,y,z = trans
 
-        self.rPid = PID(Kp=2, Kd=3, Ki=0.5)
-        self.yPid = PID(Kp=2, Kd=3, Ki=0.5)
-        self.gammaPid  = PID(Kp=2, Kd=3, Ki=0.5)
+        # control:
+        # 1. the radius from the dock,
+        # 2. the height of the ROV relative to the dock,
+        # 3. the angle of the ROV relative to the dock (between pi and -pi)
+        self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
 
-    def setDesired(self, desired):
-        self.desired = desired
+        self.pid = ( PID(Kp=2, Kd=3, Ki=0.5), PID(Kp=2, Kd=3, Ki=0.5), PID(Kp=2, Kd=3, Ki=0.5) )
 
-    def update(self, current_value):
-        error = desired - current_value
-        return pid.update(error)
+    def setDesired(self, trans):
+        x,y,z = trans
+        self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
 
-    def sendToRov(self):
-        # something
+    def update(self, trans):
+        error = [desired_i - trans_i for desired_i, trans_j in zip(desired, trans)]
+        return [ pid[i].update(error[i]) for i in range(3) ]
+
+    
