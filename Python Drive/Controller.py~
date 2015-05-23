@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
-import math
-import rospy
 from PID import *
 from MotorController import Control
+import math
+<<<<<<< HEAD
+=======
+import zip
+import rospy
 from std_msgs.msg import String
+>>>>>>> 41207403805396d2849b6ca06ded50c1587a6c37
 
 # import note for the math: 
 #   - z is the axis pointing out of the dock
@@ -30,14 +34,21 @@ class Controller():
 		x,y,z = trans
 		self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
 
-    	def update(self, trans):
-		error = [desired_i - trans_i for desired_i, trans_i in zip(self.desired, trans)]
-		
-		# these are in r y gamma format and we need to go back to x y z
-		r,y,gamma = [ self.pid[i].update(error[i]) for i in range(3) ]
+<<<<<<< HEAD
+    def update(self, trans):
+        error = [desired_i - trans_i for desired_i, trans_i in zip(self.desired, trans)]
+        
+        # these are in r y gamma format and we need to go back to x y z
+        r,y,gamma = [ self.pid[i].update(error[i]) for i in range(3) ]
 
-		return [ r * math.cos(gamma), y, r * math.sin(gamma) ]
+        return [ r * math.cos(gamma), y, r * math.sin(gamma) ]
 
+
+=======
+	def update(self, trans):
+		error = [desired_i - trans_i for desired_i, trans_j in zip(desired, trans)]
+		return [ pid[i].update(error[i]) for i in range(3) ]
+>>>>>>> 41207403805396d2849b6ca06ded50c1587a6c37
 
 	# make sure TunerGUI.py is running before calling this method
 	def listen(self):		
