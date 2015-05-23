@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import from PID *
-import math
-import zip
+#import from PID *
+#import math
+#import zip
 import rospy
 from std_msgs.msg import String
 
@@ -14,18 +14,21 @@ from std_msgs.msg import String
 #   - gamma is the angle of the ROV relative to the dock
 
 class Controller():
-	def __init__(self, trans):
+	def __init__(self):#, trans):
 
-		x,y,z = trans
+		#x,y,z = trans
 
 		# control:
 		# 1. the radius from the dock,
 		# 2. the height of the ROV relative to the dock,
 		# 3. the angle of the ROV relative to the dock (between pi and -pi)
-		self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
+		#self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
 
-		self.pid = ( PID(Kp=2, Kd=3, Ki=0.5), PID(Kp=2, Kd=3, Ki=0.5), PID(Kp=2, Kd=3, Ki=0.5) )
-
+		#self.pid = ( PID(Kp=2, Kd=3, Ki=0.5), PID(Kp=2, Kd=3, Ki=0.5), PID(Kp=2, Kd=3, Ki=0.5) )
+		mylist = self.listen()
+		for number in mylist:
+			print number		
+		
 	def setDesired(self, trans):
 		x,y,z = trans
 		self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
@@ -42,4 +45,5 @@ class Controller():
 		mylist = csvString.split(',')
 		return mylist
 
+Controller()
     
