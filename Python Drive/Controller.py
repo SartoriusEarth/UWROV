@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import from PID *
+from PID import *
+from MotorController import Control
 import math
-import zip
 
 # import note for the math: 
 #   - z is the axis pointing out of the dock
@@ -29,7 +29,13 @@ class Controller():
         self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
 
     def update(self, trans):
-        error = [desired_i - trans_i for desired_i, trans_j in zip(desired, trans)]
-        return [ pid[i].update(error[i]) for i in range(3) ]
+        error = [desired_i - trans_i for desired_i, trans_i in zip(self.desired, trans)]
+        
+        # these are in r y gamma format and we need to go back to x y z
+        r,y,gamma = [ self.pid[i].update(error[i]) for i in range(3) ]
+
+        return [ r * math.cos(gamma), y, r * math.sin(gamma) ]
+
+
 
     

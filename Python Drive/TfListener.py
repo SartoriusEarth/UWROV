@@ -10,8 +10,6 @@ if __name__ == '__main__':
     rospy.init_node('tf_listen')
     listener = tf.TransformListener()
 
-    controller = Controller([0,0,0])
-
     rate = rospy.Rate(10.0)
     while not rospy.is_shutdown():
         try:
@@ -22,7 +20,5 @@ if __name__ == '__main__':
         print 'translation: ',trans
         angles = euler_from_quaternion(rot)
         print 'rotation: ',[(180.0/math.pi)*i for i in angles]
-
-        pid_value = controller.update(trans)
 
         rate.sleep()

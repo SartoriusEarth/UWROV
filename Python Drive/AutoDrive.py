@@ -4,6 +4,7 @@ import pygame
 import rospy
 import tf
 from OrcusGUI import OrcusGUI
+from Controller import *
 from MotorController import *
 from tf.transformations import euler_from_quaternion
 
@@ -48,17 +49,39 @@ def onexit():
     update_motor_values();
     write_motor_values(ser);
 
+def update_controller(controller):
+    try:
+        (trans,rot) = listener.lookupTransform('W', 'A', rospy.Time(0))
+        angles = euler_from_quaternion(rot) # in radians
+
+        x,y,z = controller.update(trans)
+
+        # these values need to be between 0 and 1
+        PID_CONSTANT = 500 # temporary value
+        control.trans_x = x / PID_CONSTANT
+        control.trans_y = z / PID_CONSTANT
+        control.rise = y / PID_CONSTANT
+
+        # need to deal with yaw separately
+        control.yaw = 0
+
+        print control
+
+    except (tf.LookupException, tf.ConnectivityException):
+        pass
+
 def mainDrive():
     
+    update_controller(controller)
     update_motor_values(control)
 
     # sets the motor values to the sliders
-    motors[MOTOR.FR_LF].power = gui.frontLeft * 1.25
-    motors[MOTOR.FR_RT].power = gui.frontRight * 1.25
-    motors[MOTOR.BA_LF].power = gui.backLeft * 1.25 
-    motors[MOTOR.BA_RT].power = gui.backRight * 1.25
-    motors[MOTOR.FR_VT].power = gui.frontVert * 1.25
-    motors[MOTOR.BA_VT].power = gui.backVert * 1.25
+    # motors[MOTOR.FR_LF].power = gui.frontLeft * 1.25
+    # motors[MOTOR.FR_RT].power = gui.frontRight * 1.25
+    # motors[MOTOR.BA_LF].power = gui.backLeft * 1.25 
+    # motors[MOTOR.BA_RT].power = gui.backRight * 1.25
+    # motors[MOTOR.FR_VT].power = gui.frontVert * 1.25
+    # motors[MOTOR.BA_VT].power = gui.backVert * 1.25
 
     gui.drawMotorStatus(motors)
     gui.estopControl()
@@ -67,15 +90,6 @@ def mainDrive():
         write_motor_values(ser);
     except SerialTimeoutException:
         print("write timeout");
-
-    # try:
-    #     (trans,rot) = listener.lookupTransform('W', 'A', rospy.Time(0))
-    #     print 'translation: ',trans
-    #     angles = euler_from_quaternion(rot)
-    #     print 'rotation: ',[(180.0/math.pi)*i for i in angles]
-    # except (tf.LookupException, tf.ConnectivityException):
-    #     gui.after(1, mainDrive)
-
 
     gui.after(1, mainDrive) # loops the mainDrive method
 
@@ -92,7 +106,9 @@ if __name__=="__main__":
 
     ser = connect("/dev/ttyACM0")
 
-    # listener = tf.TransformListener()
+    listener = tf.TransformListener()
+
+    controller = Controller([0,0,0])
 
     gui.after(1, mainDrive)
     gui.mainloop()

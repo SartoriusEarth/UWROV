@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     rate = rospy.Rate(10.0)
     while not rospy.is_shutdown():
-        br.sendTransform((0.5, 1.0, 0),
+        br.sendTransform((1.0, 1.0, 1.0),
                          tf.transformations.quaternion_from_euler(0, 0, 30*math.pi/180),
                          rospy.Time.now(),
                          "A",     # child
