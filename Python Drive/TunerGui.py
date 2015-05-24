@@ -20,7 +20,7 @@ class TunerGui(tk.Frame):
 		self.sliderFrame.motorScrolls = [None]*9	
 		
 		# Create list of motor labels
-		sliderLabels = ["z Kp", "z Ki", "z Kd", "r Kp", "r Ki", "r Kd", "gamma Kp", "gamma Ki", "gamma Kd" ]
+		sliderLabels = ["r Kp", "r Ki", "r Kd", "y Kp", "y Ki", "y Kd", "gamma Kp", "gamma Ki", "gamma Kd" ]
 
 		# Create scroll bars for each PID constant
 		for i in range(0,9):

@@ -157,12 +157,6 @@ def write_motor_values(ser):
         ser.write(dir_bytes)
 
 
-def update_by_navigation(control):
-    # get navigation values from ros
-
-    update_motor_values(control)
-
-
 def update_motor_values(control):
     # do something about thisself.
     global motors;
@@ -246,8 +240,6 @@ def get_rise_power(n, control):
     raise ValueError("get_rise_power: Illegal motor number");
 
 
-
-
 def update_joy_values(joystick, control):
     control.trans_x = joystick.get_axis(0);
     control.trans_y = -1 * joystick.get_axis(1);
@@ -302,11 +294,8 @@ val = 0
 def mainDrive():
 
     update_joy_values(joystick, control)
-    
-    if (gui.navigateStatus()):
-        update_by_navigation(control)
-    else:
-        update_motor_values(control)
+
+    update_motor_values(control)
 
     # sets the motor values to the sliders
     motors[MOTOR.FR_LF].power = gui.frontLeft * 1.25

@@ -22,7 +22,8 @@ class Controller():
         # 1. the radius from the dock,
         # 2. the height of the ROV relative to the dock,
         # 3. the angle of the ROV relative to the dock (between pi and -pi)
-        self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
+        # self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
+        self.desired = (x, y, z)
 
         self.pid = ( PID(Kp=2, Kd=3, Ki=0.5), PID(Kp=2, Kd=3, Ki=0.5), PID(Kp=2, Kd=3, Ki=0.5) )
 
@@ -31,15 +32,20 @@ class Controller():
 
     def setDesired(self, trans):
         x,y,z = trans
-        self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
+        # self.desired = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
+        self.desired = trans
 
     def update(self, trans):
-        error = [desired_i - trans_i for desired_i, trans_i in zip(self.desired, trans)]
+        x,y,z = trans
+        transN = ( math.sqrt(x**2 + z**2), y, math.atan2(x, z) )
+
+        error = [desired_i - trans_i for desired_i, trans_i in zip(self.desired, trans)] #transN for r,y,gamma
         
         # these are in r y gamma format and we need to go back to x y z
         r,y,gamma = [ self.pid[i].update(error[i]) for i in range(3) ]
 
-        return [ r * math.cos(gamma), y, r * math.sin(gamma) ]
+        # return [ r * math.cos(gamma), y, r * math.sin(gamma) ]
+        return [r,y,gamma]
 
     def setPidParameters(self, parameters):
         [ self.pid[i].setParameters(parameters[i:i+3]) for i in range(3) ]

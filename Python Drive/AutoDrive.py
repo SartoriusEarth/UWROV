@@ -51,13 +51,13 @@ def onexit():
 
 def update_controller(controller):
     try:
-        (trans,rot) = listener.lookupTransform('W', 'A', rospy.Time(0))
+        (trans,rot) = listener.lookupTransform('/desired_position', '/camera', rospy.Time(0))
         angles = euler_from_quaternion(rot) # in radians
 
         x,y,z = controller.update(trans)
 
         # these values need to be between 0 and 1
-        PID_CONSTANT = 500 # temporary value
+        PID_CONSTANT = 10 # temporary value
         control.trans_x = x / PID_CONSTANT
         control.trans_y = z / PID_CONSTANT
         control.rise = y / PID_CONSTANT
@@ -65,10 +65,13 @@ def update_controller(controller):
         # need to deal with yaw separately
         control.yaw = 0
 
-        print control
+        print "control: ",control
+        print "trans: ",trans
 
+    except (tf.ExtrapolationException):
+        control.trans_x, control.trans_y, control.rise = 0,0,0
     except (tf.LookupException, tf.ConnectivityException):
-        pass
+        control.trans_x, control.trans_y, control.rise = 0,0,0
 
 def mainDrive():
     
