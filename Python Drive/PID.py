@@ -19,6 +19,12 @@ class PID():
         self.D = 0
         self.I = 0
 
+    def setParameters(self, parameters):
+        Kp,Ki,Kd = parameters
+        self.Kp = Kp
+        self.Ki = Ki
+        self.Kd = Kd
+
     def update(self, error):
 
         self.P = self.Kp * error

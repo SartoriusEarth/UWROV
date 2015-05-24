@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import Tkinter as tk
 from Tkinter import*
@@ -20,7 +20,7 @@ class TunerGui(tk.Frame):
 		self.sliderFrame.motorScrolls = [None]*9	
 		
 		# Create list of motor labels
-		sliderLabels = ["z Kp", "z Ki", "z Kd", "r Kp", "r Ki", "r Kd", "theta Kp", "theta Ki", "theta Kd" ]
+		sliderLabels = ["z Kp", "z Ki", "z Kd", "r Kp", "r Ki", "r Kd", "gamma Kp", "gamma Ki", "gamma Kd" ]
 
 		# Create scroll bars for each PID constant
 		for i in range(0,9):
@@ -32,7 +32,6 @@ class TunerGui(tk.Frame):
 			self.sliderFrame.motorScrolls[i].grid(row=i, column=1, sticky=W+E)
 			
 		self.sliderFrame.grid(row=0, column=0, columnspan=2, ipadx=10, sticky=W+E)		
-		
 		
 
 	def getConstants(self):
