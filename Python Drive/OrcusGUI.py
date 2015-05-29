@@ -182,6 +182,10 @@ class OrcusGUI(tk.Frame):
 
 	def navigateCallback(self):
 		self.NAVIGATE = not self.NAVIGATE
+		if (self.NAVIGATE):
+			self.navigate.configure(background='yellow', text='Stop Navigating')
+		else:
+			self.navigate.configure(background='blue', text='Navigate')
 
 	def navigateButton(self):
 		self.navigate = tk.Button(self, text='NAVIGATE', command=self.navigateCallback, background='blue', width=10, padx=20, pady=20)

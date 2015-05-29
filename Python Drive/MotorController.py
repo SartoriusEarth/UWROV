@@ -160,5 +160,4 @@ def get_rise_power(n, control):
         return 0;
     if n == MOTOR.FR_VT or n == MOTOR.BA_VT:
         return control.rise_value();
-    raise ValueError("get_rise_power: Illegal motor number");
-
+    raise ValueError("get_rise_power: Illegal motor number")

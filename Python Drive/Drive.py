@@ -241,13 +241,12 @@ def get_rise_power(n, control):
 
 
 def update_joy_values(joystick, control):
-    control.trans_x = joystick.get_axis(0);
-    control.trans_y = -1 * joystick.get_axis(1);
-    control.rise = -1 * joystick.get_axis(4);
-    control.yaw = joystick.get_axis(2);
+    control.trans_x = joystick.get_axis(0)
+    control.trans_y = -1 * joystick.get_axis(1)
+    control.rise = -1 * joystick.get_axis(3)
+    control.yaw = joystick.get_axis(2)
 
-    #output_str = control + ",%s", rospy.get_time()
-    #rospy.loginfo(output_str)
+    print "axis 0: ",joystick.get_axis(0),"\n",dir(joystick.get_axis(0))
 
 def process_joy_events():
     for event in pygame.event.get():
@@ -298,12 +297,12 @@ def mainDrive():
     update_motor_values(control)
 
     # sets the motor values to the sliders
-    motors[MOTOR.FR_LF].power = gui.frontLeft * 1.25
-    motors[MOTOR.FR_RT].power = gui.frontRight * 1.25
-    motors[MOTOR.BA_LF].power = gui.backLeft * 1.25 
-    motors[MOTOR.BA_RT].power = gui.backRight * 1.25
-    motors[MOTOR.FR_VT].power = gui.frontVert * 1.25
-    motors[MOTOR.BA_VT].power = gui.backVert * 1.25
+    # motors[MOTOR.FR_LF].power = gui.frontLeft * 1.25
+    # motors[MOTOR.FR_RT].power = gui.frontRight * 1.25
+    # motors[MOTOR.BA_LF].power = gui.backLeft * 1.25 
+    # motors[MOTOR.BA_RT].power = gui.backRight * 1.25
+    # motors[MOTOR.FR_VT].power = gui.frontVert * 1.25
+    # motors[MOTOR.BA_VT].power = gui.backVert * 1.25
 
     gui.drawMotorStatus(motors)
     gui.estopControl()
