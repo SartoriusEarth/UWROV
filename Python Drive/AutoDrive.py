@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 import pygame
 import rospy
 import tf
@@ -26,20 +27,7 @@ from tf.transformations import euler_from_quaternion
 
 """
 
-
-ser = None;
-control = Control();
-
-
-def connect(port_name):
-    """Returns a Serial object that is connected to the port_name. Returns
-    None if the connection could not be made."""
-
-    try:
-        return Serial(port_name, timeout = .5, writeTimeout = .5);
-    except SerialException:
-        print("connect: could not connect to port " + port_name);
-        return None;
+control = Control()
 
 
 def onexit():
@@ -47,7 +35,7 @@ def onexit():
     control.trans_x_tare, control.trans_y_tare = 0, 0;
     control.yaw_tare, control.rise_tare = 0, 0;
     update_motor_values();
-    #write_motor_values(ser);
+    write_motor_values(ser);
 
 def update_joy_values(joystick, control):
     control.trans_x = joystick.get_axis(0);
@@ -77,12 +65,12 @@ def joy_init():
     pygame.joystick.init();
     if pygame.joystick.get_count() == 0:
         raise Exception("joy_init: No joysticks connected");
-    joystick = pygame.joystick.Joystick(1);
-    joystick.init();
+    joystick = pygame.joystick.Joystick(1)
+    joystick.init()
     
-    control.tare();
+    control.tare()
     
-    return joystick;
+    return joystick
 
 def normalize_0_1(value):
     PID_CONSTANT = 10 # temporary value
@@ -130,10 +118,11 @@ def update_controller(controller):
         control.trans_x, control.trans_y, control.rise = 0,0,0
 
 def mainDrive():
-    
+
     if (gui.navigateStatus()):
         update_controller(controller)
     else:
+        pass
         update_joy_values(joystick, control)
 
  
@@ -150,10 +139,7 @@ def mainDrive():
     gui.drawMotorStatus(motors)
     gui.estopControl()
 
-    #try:
-    #    write_motor_values(ser);
-    #except SerialTimeoutException:
-    #    print("write timeout");
+    write_motor_values(gui)
 
     process_joy_events()
 
@@ -161,6 +147,7 @@ def mainDrive():
 
 
 if __name__=="__main__":
+
     rospy.init_node('autodrive')
 
     # Start gui and call mainDrive loop
@@ -169,8 +156,6 @@ if __name__=="__main__":
     gui.master.minsize(812, 800)
     gui.master.maxsize(812, 800)
     gui.master.title('ROV ORCUS')
-
-    #ser = connect("/dev/ttyACM0")
 
     joystick = joy_init()
 

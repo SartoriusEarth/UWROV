@@ -5,6 +5,19 @@ import pygame
 from MOTOR import MOTOR
 from serial import Serial, SerialException, SerialTimeoutException
 
+ser = None
+
+def connect(port_name):
+    """Returns a Serial object that is connected to the port_name. Returns
+    None if the connection could not be made."""
+
+    global ser
+
+    try:
+        ser = Serial(port_name, timeout = .5, writeTimeout = .5)
+    except SerialException:
+        print("connect: could not connect to port " + port_name)
+
 class Motor:
     def __init__(self, ID, pow_header, dir_header, power = 0):
         self.ID = ID
@@ -55,12 +68,32 @@ class Control:
     def rise_value(self):
         return self.rise - self.rise_tare + self.rise_control;
 
-def write_motor_values(ser):
+def write_motor_values(gui):
+    global ser
+
+    if (ser == None):
+        connect("/dev/ttyACM0")
+
+    write_timeout = False
+    try:
+        write_motor_values_helper(ser)
+    except SerialTimeoutException:
+        print "write timeout"
+        write_timeout = True
+
+    # creates new serial if write attempts are failing
+    if write_timeout == True:
+        gui.navigateCallback()
+        ser.close()
+        connect("/dev/ttyACM0")
+
+
+def write_motor_values_helper(ser):
 	"""Writes the motor power and direction to the serial port.
 	Each write consists of a header followed by the value repeated twice."""
 
 	# do something about this
-	global motors;
+	global motors
 
 	if not isinstance(ser, Serial):
 	    raise ValueError("write_motor_values: ser not of type Serial, of type",

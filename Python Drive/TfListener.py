@@ -13,7 +13,7 @@ if __name__ == '__main__':
     rate = rospy.Rate(10.0)
     while not rospy.is_shutdown():
         try:
-            (trans,rot) = listener.lookupTransform('W', 'A', rospy.Time(0))
+            (trans,rot) = listener.lookupTransform('marker_origin', 'desired_position_controller', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException):
             continue
 

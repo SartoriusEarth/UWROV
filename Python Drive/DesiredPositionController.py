@@ -1,20 +1,41 @@
 #!/usr/bin/env python
 import rospy
 import tf
+import math
 from sensor_msgs.msg import Joy
 
+br = None
+desired_trans = (0,0,0)
+desired_rot = (0,0,0,0)
+
 def callback(data):
-    transX = data.axes[2] # how much we move in the x axis
-    transY = data.axes[3] # how much we move in the y axis
-    
-    br.sendTransform((transX, transY, 0),
-                 tf.transformations.quaternion_from_euler(0, 0, 0),
-                 rospy.Time.now(),
-                 "desired_position_controller",     # child
-                 "marker_origin"                    # parent
-                 )
+    global br
+    global desired_trans
+    global desired_rot
+
+    trans = ( -0.01*data.axes[2],    # translation x axis
+              0,                  # translation y axis
+              -0.01*data.axes[3] )   # translation z axis
+
+    desired_trans = map(sum, zip(trans, desired_trans))
+
+    rot = tf.transformations.quaternion_from_euler( 
+            0,    # rotation x axis
+            -20*data.axes[0],    # rotation y axis
+            0 )   # rotation z axis 
+
+    desired_rot = map(sum, zip(rot, desired_rot))
+
+    br.sendTransform(desired_trans,
+                desired_rot,
+                rospy.Time.now(),
+                "desired_position_controller",     # child
+                "marker_origin"                    # parent
+                )
 
 def main():
+    global br
+
     # starts the node
     rospy.init_node('DesiredPositionController')
 
